@@ -1,15 +1,25 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { AutoForm } from 'uniforms-unstyled';
 import './App.css';
 import { bridge as schema } from './GuestSchema.ts';
 
 export function GuestFormBasic() {
-  return <AutoForm schema={schema} onSubmit={console.log} />;
+  const [model, setModel] = useState({
+    firstName: 'John',
+    lastName: 'Doe',
+    workExperience: 15,
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const onChange = useCallback((key: string , value: unknown) => {
+    setModel((state) => ({ ...state, [key]: value }));
+    console.log(model);
+  }, [model]);
+
+  return <AutoForm schema={schema} model={model} onChange={onChange} />;
 }
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <GuestFormBasic />
